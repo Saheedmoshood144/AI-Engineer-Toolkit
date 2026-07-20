@@ -1,0 +1,6 @@
+.venv/
+*.pyc
+.vscode/
+.ipynb_checkpoints/
+output/
+.venv/
