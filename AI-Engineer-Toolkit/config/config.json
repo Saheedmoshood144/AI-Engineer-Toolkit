@@ -1,0 +1,4 @@
+{
+    "dataset_path": "employees.csv",
+    "log_level": "INFO"
+}
