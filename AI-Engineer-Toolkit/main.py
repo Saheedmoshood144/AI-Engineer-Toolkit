@@ -1,19 +1,55 @@
+import argparse
+import pandas as pd
+
+from src.config import load_config
 from src.logger import get_logger
+from src.pipeline import DataPipeline
+
 
 logger = get_logger(__name__)
 
-logger.info("Application started")
-logger.warning("Configuration file not found")
-logger.error("Unable to connect to database")
 
-from src.dataset import Dataset
+def main() -> pd.DataFrame | None:
+    """
+    Run the AI Engineer Toolkit pipeline from the command line.
 
-dataset = Dataset("employees.csv")
+    Returns:
+        pd.DataFrame | None: Processed dataset if successful,
+        otherwise None.
+    """
 
-dataset.display_path()
+    parser = argparse.ArgumentParser(
+        description="AI Engineer Toolkit Pipeline"
+    )
 
-dataset.load()
+    parser.add_argument(
+        "--config",
+        required=True,
+        help="Path to configuration file"
+    )
 
-dataset.clean()
+    args = parser.parse_args()
 
-print(dataset.data)
+    logger.info("Application started.")
+
+    config = load_config(args.config)
+
+    if config is None:
+        logger.error("Configuration loading failed.")
+        return None
+
+    pipeline = DataPipeline(config)
+
+    result = pipeline.run()
+
+    if result is None:
+        logger.error("Pipeline execution failed.")
+        return None
+
+    logger.info("Pipeline completed successfully.")
+
+    return result
+
+
+if __name__ == "__main__":
+    main()
