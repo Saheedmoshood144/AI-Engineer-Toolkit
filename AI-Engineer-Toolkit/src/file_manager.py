@@ -28,9 +28,9 @@ def read_csv(file_path: str | Path) -> pd.DataFrame | None:
     except pd.errors.EmptyDataError:
         logging.error("The file is empty: %s", path)
     except pd.errors.ParserError:
-        logging.error("Could not parse the CSV file: %s", path)
+        logger.error("Could not parse the CSV file: %s", path)
     except Exception as e:
-        logging.exception("An unexpected error occurred while reading '%s': %s", path, e)
+        logger.exception("An unexpected error occurred while reading '%s': %s", path, e)
 
     return None
 
@@ -41,8 +41,9 @@ import logging
 import pandas as pd
 
 # Basic logging configuration
-logging.basicConfig(level=logging.ERROR)
+from src.logger import get_logger
 
+logger = get_logger(__name__)
 def write_csv(dataframe: pd.DataFrame, file_path: str | Path) -> bool:
     """
     Writes a pandas DataFrame to a CSV file.
