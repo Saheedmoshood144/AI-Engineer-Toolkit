@@ -31,7 +31,7 @@ class DataSplitter:
         self,
         test_size: float = 0.2,
         random_state: int = 42
-    ) -> tuple:
+    ) -> tuple | None:
         """
         Split data into training and testing sets.
 
@@ -45,6 +45,16 @@ class DataSplitter:
         """
 
         logger.info("Starting dataset split.")
+
+        logger.info(
+            f"Dataset columns: {list(self.data.columns)}"
+        )
+
+        if self.target_column not in self.data.columns:
+            logger.error(
+                f"Target column '{self.target_column}' not found."
+            )
+            return None
 
         X = self.data.drop(
             columns=[self.target_column]

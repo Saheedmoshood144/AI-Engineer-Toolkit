@@ -3,40 +3,53 @@ import pandas as pd
 from src.pipeline import DataPipeline
 
 
-def test_pipeline_run(tmp_path):
+def test_complete_ml_pipeline(tmp_path):
     """
-    Test that the pipeline loads data and removes missing values.
+    Test complete machine learning workflow.
     """
 
-    # Create temporary CSV file
     csv_file = tmp_path / "employees.csv"
 
     data = pd.DataFrame(
         {
-            "name": ["John", "Mary", None],
-            "age": [25, None, 30]
+            "age": [20, 25, 30, 35, 40, 45],
+            "salary": [
+                30000,
+                40000,
+                50000,
+                60000,
+                70000,
+                80000
+            ],
+            "target": [
+                0,
+                0,
+                0,
+                1,
+                1,
+                1
+            ]
         }
     )
 
-    data.to_csv(csv_file, index=False)
+    data.to_csv(
+        csv_file,
+        index=False
+    )
 
-    # Create pipeline configuration
     config = {
         "dataset_path": str(csv_file),
+        "target_column": "target",
         "log_level": "INFO"
     }
 
-    # Create and run pipeline
     pipeline = DataPipeline(config)
 
     result = pipeline.run()
 
-    # Verify pipeline returned a DataFrame
     assert result is not None
-    assert isinstance(result, pd.DataFrame)
 
-    # Verify missing values were removed
-    assert result.isnull().sum().sum() == 0
-
-    # Verify rows containing missing values were removed
-    assert len(result) == 1
+    assert "accuracy" in result
+    assert "precision" in result
+    assert "recall" in result
+    assert "f1_score" in result

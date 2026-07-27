@@ -1,5 +1,4 @@
 import argparse
-import pandas as pd
 
 from src.config import load_config
 from src.logger import get_logger
@@ -9,17 +8,13 @@ from src.pipeline import DataPipeline
 logger = get_logger(__name__)
 
 
-def main() -> pd.DataFrame | None:
+def main() -> dict | None:
     """
     Run the AI Engineer Toolkit pipeline from the command line.
-
-    Returns:
-        pd.DataFrame | None: Processed dataset if successful,
-        otherwise None.
     """
 
     parser = argparse.ArgumentParser(
-        description="AI Engineer Toolkit Pipeline"
+        description="AI Engineer Toolkit ML Pipeline"
     )
 
     parser.add_argument(
@@ -30,25 +25,37 @@ def main() -> pd.DataFrame | None:
 
     args = parser.parse_args()
 
-    logger.info("Application started.")
+    logger.info(
+        "Application started."
+    )
 
-    config = load_config(args.config)
+    config = load_config(
+        args.config
+    )
 
     if config is None:
-        logger.error("Configuration loading failed.")
+        logger.error(
+            "Configuration loading failed."
+        )
         return None
 
-    pipeline = DataPipeline(config)
+    pipeline = DataPipeline(
+        config
+    )
 
-    result = pipeline.run()
+    metrics = pipeline.run()
 
-    if result is None:
-        logger.error("Pipeline execution failed.")
+    if metrics is None:
+        logger.error(
+            "Pipeline execution failed."
+        )
         return None
 
-    logger.info("Pipeline completed successfully.")
+    logger.info(
+        f"Model evaluation metrics: {metrics}"
+    )
 
-    return result
+    return metrics
 
 
 if __name__ == "__main__":

@@ -6,6 +6,7 @@ from sklearn.metrics import (
 )
 
 import pandas as pd
+import numpy as np
 
 from src.logger import get_logger
 
@@ -19,38 +20,43 @@ class ModelEvaluator:
     """
 
     def evaluate(
-    self,
-    y_true: pd.Series,
-    y_pred: np.ndarray
-) -> dict[str, float]:
+        self,
+        y_true: pd.Series,
+        y_pred: np.ndarray
+    ) -> dict:
         """
         Calculate evaluation metrics.
 
         Args:
             y_true: Actual target values.
-            y_pred: Model predictions.
+            y_pred: Predicted target values.
 
         Returns:
             Dictionary containing evaluation scores.
         """
 
-        logger.info("Starting model evaluation.")
+        logger.info(
+            "Starting model evaluation."
+        )
 
         metrics = {
             "accuracy": accuracy_score(
                 y_true,
                 y_pred
             ),
+
             "precision": precision_score(
                 y_true,
                 y_pred,
                 zero_division=0
             ),
+
             "recall": recall_score(
                 y_true,
                 y_pred,
                 zero_division=0
             ),
+
             "f1_score": f1_score(
                 y_true,
                 y_pred,
@@ -58,6 +64,8 @@ class ModelEvaluator:
             )
         }
 
-        logger.info("Model evaluation completed.")
+        logger.info(
+            "Model evaluation completed."
+        )
 
         return metrics

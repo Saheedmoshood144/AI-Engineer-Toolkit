@@ -1,4 +1,5 @@
 {
-    "dataset_path": "employees.csv",
+    "dataset_path": "data/employees.csv",
+    "target_column": "target",
     "log_level": "INFO"
 }
