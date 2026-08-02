@@ -1,8 +1,0 @@
-# Save model
-
-persistence = ModelPersistence()
-
-persistence.save(
-    model,
-    "models/model.pkl"
-)

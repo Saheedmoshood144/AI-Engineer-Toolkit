@@ -1,3 +1,5 @@
+from xml.parsers.expat import model
+
 from src.dataset import Dataset
 from src.validator import DatasetValidator
 from src.feature_engineering import FeatureEngineer
@@ -5,6 +7,7 @@ from src.data_splitter import DataSplitter
 from src.model_trainer import ModelTrainer
 from src.model_evaluator import ModelEvaluator
 from src.model_persistence import ModelPersistence
+
 from src.logger import get_logger
 
 
@@ -110,7 +113,14 @@ class DataPipeline:
         X_train,
         y_train
         )
+        # Save trained model
 
+        persistence = ModelPersistence()
+
+        persistence.save(
+        model,
+        "models/model.pkl"
+        )
         # Predict
         predictions = trainer.predict(
             X_test
