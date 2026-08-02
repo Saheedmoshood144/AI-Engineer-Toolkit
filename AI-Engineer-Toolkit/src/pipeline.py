@@ -4,7 +4,7 @@ from src.feature_engineering import FeatureEngineer
 from src.data_splitter import DataSplitter
 from src.model_trainer import ModelTrainer
 from src.model_evaluator import ModelEvaluator
-
+from src.model_persistence import ModelPersistence
 from src.logger import get_logger
 
 
@@ -106,9 +106,9 @@ class DataPipeline:
         # Train model
         trainer = ModelTrainer()
 
-        trainer.train(
-            X_train,
-            y_train
+        model = trainer.train(
+        X_train,
+        y_train
         )
 
         # Predict
