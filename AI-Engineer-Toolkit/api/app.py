@@ -1,14 +1,28 @@
+import pandas as pd
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
-import pandas as pd
 
 from src.logger import get_logger
 from src.model_persistence import ModelPersistence
 
+class PredictionResponse(BaseModel):
+    """
+    Prediction response schema.
+    """
+
+    prediction: int
+    age: int
+    salary: float
+    model: str
 
 logger = get_logger(__name__)
 
-app = FastAPI()
+app = FastAPI(
+    title="AI Engineer Toolkit API",
+    description="Machine Learning prediction API built with FastAPI",
+    version="1.0.0"
+)
 
 
 @app.get("/")
@@ -34,8 +48,10 @@ def health():
 # Load saved model once when API starts
 persistence = ModelPersistence()
 
+MODEL_PATH = "models/model.pkl"
+
 model = persistence.load(
-    "models/model.pkl"
+    MODEL_PATH
 )
 
 
@@ -75,10 +91,12 @@ def predict(employee: EmployeeInput):
     )
 
     input_data = pd.DataFrame(
-        [{
-            "age": employee.age,
-            "salary": employee.salary
-        }]
+        [
+            {
+                "age": employee.age,
+                "salary": employee.salary
+            }
+        ]
     )
 
     prediction = model.predict(

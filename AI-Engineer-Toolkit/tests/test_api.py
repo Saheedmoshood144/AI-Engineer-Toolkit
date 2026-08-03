@@ -38,3 +38,13 @@ def test_predict():
     assert "prediction" in body
 
     assert body["model"] == "LogisticRegression"
+
+def test_api_title():
+    response = client.get("/openapi.json")
+
+    assert response.status_code == 200
+
+    assert (
+        response.json()["info"]["title"]
+        == "AI Engineer Toolkit API"
+    )
