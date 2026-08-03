@@ -4,6 +4,7 @@ from fastapi import FastAPI, HTTPException
 
 from src.logger import get_logger
 from src.model_persistence import ModelPersistence
+from src.settings import Settings
 
 from api.schemas import (
     EmployeeInput,
@@ -13,12 +14,22 @@ from api.schemas import (
 
 logger = get_logger(__name__)
 
+
+# Load application settings first
+settings = Settings()
+
+
 app = FastAPI(
-    title="AI Engineer Toolkit API",
-    description="Machine Learning prediction API built with FastAPI",
-    version="1.0.0"
+    title=settings.app_name
 )
 
+
+# Load trained model
+persistence = ModelPersistence()
+
+model = persistence.load(
+    settings.model_path
+)
 
 @app.get("/")
 def home():
@@ -41,12 +52,13 @@ def health():
 
 
 # Load saved model once when API starts
+settings = Settings()
+
+
 persistence = ModelPersistence()
 
-MODEL_PATH = "models/model.pkl"
-
 model = persistence.load(
-    MODEL_PATH
+    settings.model_path
 )
 
 
