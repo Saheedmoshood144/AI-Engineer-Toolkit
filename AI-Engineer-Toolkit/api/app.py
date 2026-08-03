@@ -1,20 +1,15 @@
 import pandas as pd
 
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
 
 from src.logger import get_logger
 from src.model_persistence import ModelPersistence
 
-class PredictionResponse(BaseModel):
-    """
-    Prediction response schema.
-    """
+from api.schemas import (
+    EmployeeInput,
+    PredictionResponse
+)
 
-    prediction: int
-    age: int
-    salary: float
-    model: str
 
 logger = get_logger(__name__)
 
@@ -55,26 +50,12 @@ model = persistence.load(
 )
 
 
-class EmployeeInput(BaseModel):
-    """
-    Employee features used for prediction.
-    """
-
-    age: int = Field(
-        ...,
-        ge=18,
-        le=100,
-        description="Employee age"
-    )
-
-    salary: float = Field(
-        ...,
-        ge=0,
-        description="Employee salary"
-    )
 
 
-@app.post("/predict")
+@app.post(
+    "/predict",
+    response_model=PredictionResponse
+)
 def predict(employee: EmployeeInput):
     """
     Predict the target class for an employee.
